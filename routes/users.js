@@ -44,4 +44,37 @@ router.get('/:userIdToGet', (req, res) => {
   res.send(userToGet ? userToGet : 'No such user!!')
 })
 
+// DELETE one user
+router.delete('/:userIdToDelete', (req, res) => {
+  const { userIdToDelete } = req.params
+
+  const indexToDelete = mockUsers.findIndex(user => user.id === userIdToDelete)
+
+  if (indexToDelete < 0) {
+    res.send(`No user with id: ${userIdToDelete} exists!!!`)
+  } else {
+    mockUsers.splice(indexToDelete, 1)
+
+    res.send(`User with id: ${userIdToDelete} deleted`)
+  }
+})
+
+// PATCH partially update one user
+router.patch('/:userIdToUpdate', (req, res) => {
+  const { userIdToUpdate } = req.params
+  const { firstName, lastName, age } = req.body
+
+  const userToUpdate = mockUsers.find(user => user.id === userIdToUpdate)
+
+  if (userToUpdate) {
+    if (firstName) userToUpdate.firstName = firstName
+    if (lastName) userToUpdate.lastName = lastName
+    if (age) userToUpdate.age = age
+
+    res.send(`Successfully updated user with id: ${userIdToUpdate}`)
+  } else {
+    res.send(`No user with id: ${userIdToUpdate} exists!!!`)
+  }
+})
+
 export default router
